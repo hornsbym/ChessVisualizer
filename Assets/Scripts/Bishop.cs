@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Bishop : Chessman
+public class Bishop : Piece
 {
     public override bool[,] PossibleMoves()
     {

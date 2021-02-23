@@ -56,6 +56,7 @@ public class BoardManager : MonoBehaviour
     public Piece[,] pieces { get; set; }
     public Piece[,] secondaryPieces {get; set; }
     private Piece selectedPiece;
+    private Piece secondarySelectedPiece;
 
     // Boolean for maintaining which turn is which
     public bool isWhiteTurn = true;
@@ -101,12 +102,17 @@ public class BoardManager : MonoBehaviour
                 {
                     Piece piece = pieces[x, y];
                     if (piece != null && piece.isWhite == isWhiteTurn)
-                    {
-                        // Gets all the possible moves for each piece
-                        bool[,] piecePossibleMoves = piece.PossibleMoves();
+                    {   
+                        bool[,] pieceThreateningSquares;
+                        if (piece.GetType() != typeof(Pawn)) {
+                            // Gets all the possible moves for each non-pawn piece
+                            pieceThreateningSquares = piece.PossibleMoves();
+                        } else {
+                            pieceThreateningSquares = ((Pawn) piece).AttackingMoves();
+                        }
 
                         // Combines all pieces' possible moves into one board 
-                        allPossibleMoves = combinePossibleMoves(allPossibleMoves, piecePossibleMoves);
+                        allPossibleMoves = combinePossibleMoves(allPossibleMoves, pieceThreateningSquares);
                     }
                 }
             }
@@ -215,6 +221,7 @@ public class BoardManager : MonoBehaviour
 
         // Selects the abstract piece
         selectedPiece = pieces[x, y];
+        secondarySelectedPiece = secondaryPieces[x,y];
 
         // Applies a texture to the selected piece.
         previousMat = selectedPiece.GetComponent<MeshRenderer>().material;
@@ -239,12 +246,15 @@ public class BoardManager : MonoBehaviour
             return;
         }
 
+        Piece shadowSecondaryPiece = secondaryPieces[capturedPiece.CurrentX, capturedPiece.CurrentY];
+
         // Removes the captured piece's game object from the board
         pieceGameObjects.Remove(capturedPiece.gameObject);
-        secondaryPieceGameObjects.Remove(capturedPiece.gameObject);
+        secondaryPieceGameObjects.Remove(shadowSecondaryPiece.gameObject);
 
         // Move to a random spot on the discard zones
         if (capturedPiece.isWhite) {
+            // For 3d pieces, move the pieces off the board to a random spot
             Renderer whiteDiscardZoneRenderer = whiteDiscardZone.GetComponent<Renderer>();
             Vector3 whiteDiscardZoneMins = whiteDiscardZoneRenderer.bounds.min;
             Vector3 whiteDiscardZoneMaxs = whiteDiscardZoneRenderer.bounds.max;
@@ -257,6 +267,7 @@ public class BoardManager : MonoBehaviour
 
             capturedPiece.gameObject.transform.position = randomWhiteDiscardSpot;
         } else {
+            // For 3d pieces, move the pieces off the board to a random spot
             Renderer blackDiscardZoneRenderer = blackDiscardZone.GetComponent<Renderer>();
 
             Vector3 blackDiscardZoneMins = blackDiscardZoneRenderer.bounds.min;
@@ -270,6 +281,9 @@ public class BoardManager : MonoBehaviour
 
             capturedPiece.gameObject.transform.position = randomBlackDiscardSpot;
         }
+
+        Destroy(shadowSecondaryPiece.gameObject);
+
     }
 
     // Handles move selection logic for the provided coordinates
@@ -330,13 +344,18 @@ public class BoardManager : MonoBehaviour
 
             // Nullifies the current position
             pieces[selectedPiece.CurrentX, selectedPiece.CurrentY] = null;
+            secondaryPieces[secondarySelectedPiece.CurrentX, secondarySelectedPiece.CurrentY] = null;
             
             // Changes the selected piece's position to the new square in the game
             selectedPiece.transform.position = GetTileCenter(x, y);
             selectedPiece.SetPosition(x, y);
 
+            secondarySelectedPiece.transform.position = Get2dTileCenter(x, y);
+            secondarySelectedPiece.SetPosition(x,y);
+
             // Changes the selected piece's position in the board manager
             pieces[x, y] = selectedPiece;
+            secondaryPieces[x,y] = secondarySelectedPiece;
 
             // Changes to the other color's turn
             isWhiteTurn = !isWhiteTurn;
@@ -424,6 +443,9 @@ public class BoardManager : MonoBehaviour
         pieces[x, y] = go.GetComponent<Piece>();
         pieces[x, y].SetPosition(x, y);
 
+        secondaryPieces[x,y] = secondaryGo.GetComponent<Piece>();
+        secondaryPieces[x,y].SetPosition(x,y);
+
         // Keeps references to the piece views
         pieceGameObjects.Add(go);
         secondaryPieceGameObjects.Add(secondaryGo);
@@ -449,6 +471,7 @@ public class BoardManager : MonoBehaviour
 
         secondaryOrigin.x += (SECONDARY_TILE_SIZE * x) + SECONDARY_TILE_OFFSET;
         secondaryOrigin.z += (SECONDARY_TILE_SIZE * y) + SECONDARY_TILE_OFFSET;
+        secondaryOrigin.y = 0;
 
         return secondaryOrigin;
     }
@@ -473,6 +496,7 @@ public class BoardManager : MonoBehaviour
 
         // Resets all pieces in the game to a blank chess board
         pieces = new Piece[8, 8];
+        secondaryPieces = new Piece[8,8];
 
         /////// White ///////
 

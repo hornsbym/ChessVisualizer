@@ -101,4 +101,46 @@ public class Pawn : Piece
 
         return r;
     }
+
+    /// <summary>
+    /// Returns the diagonal squares for pawns.
+    /// </summary>
+    public bool[,] AttackingMoves(){
+        bool[,] r = new bool[8,8];
+
+        Piece c;
+
+        if (isWhite)
+        {
+            // Diagonal left
+            if (CurrentX != 0 && CurrentY != 7)
+            {
+                c = BoardManager.Instance.pieces[CurrentX - 1, CurrentY + 1];
+                r[CurrentX - 1, CurrentY + 1] = true;
+            }
+
+            // Diagonal right
+            if (CurrentX != 7 && CurrentY != 7)
+            {
+                c = BoardManager.Instance.pieces[CurrentX + 1, CurrentY + 1];
+                r[CurrentX + 1, CurrentY + 1] = true;
+            }
+        } else {
+            // Diagonal left
+            if (CurrentX != 0 && CurrentY != 0)
+            {
+                c = BoardManager.Instance.pieces[CurrentX - 1, CurrentY - 1];
+                r[CurrentX - 1, CurrentY - 1] = true;
+            }
+
+            // Diagonal right
+            if (CurrentX != 7 && CurrentY != 0)
+            {
+                c = BoardManager.Instance.pieces[CurrentX + 1, CurrentY - 1];
+                r[CurrentX + 1, CurrentY - 1] = true;
+            }
+        }
+
+        return r;
+    }
 }

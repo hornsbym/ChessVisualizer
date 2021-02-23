@@ -381,7 +381,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 842832367}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 45, y: 0, z: 0}
+  m_LocalPosition: {x: 45, y: -0.002, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1515216960}
@@ -579,6 +579,38 @@ Prefab:
       propertyPath: SECONDARY_TILE_OFFSET
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114047616922738136, guid: 62fb4270e55d8f94a9ed6c22ffd834c9,
+        type: 2}
+      propertyPath: secondaryBoardOrigin.x
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 114047616922738136, guid: 62fb4270e55d8f94a9ed6c22ffd834c9,
+        type: 2}
+      propertyPath: secondaryBoardOrigin.y
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 114047616922738136, guid: 62fb4270e55d8f94a9ed6c22ffd834c9,
+        type: 2}
+      propertyPath: secondaryHighlightOffsets.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114047616922738136, guid: 62fb4270e55d8f94a9ed6c22ffd834c9,
+        type: 2}
+      propertyPath: secondaryHighlightOffsets.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114047616922738136, guid: 62fb4270e55d8f94a9ed6c22ffd834c9,
+        type: 2}
+      propertyPath: secondaryHighlightPrefab
+      value: 
+      objectReference: {fileID: 1266996117647590, guid: 4072b24a6f605934dba181eeb6c185ca,
+        type: 2}
+    - target: {fileID: 114047616922738136, guid: 62fb4270e55d8f94a9ed6c22ffd834c9,
+        type: 2}
+      propertyPath: highlightPrefab
+      value: 
+      objectReference: {fileID: 1125647993253046, guid: d8f23b27334db604e86e774f68c316cd,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 62fb4270e55d8f94a9ed6c22ffd834c9, type: 2}
   m_IsPrefabParent: 0
